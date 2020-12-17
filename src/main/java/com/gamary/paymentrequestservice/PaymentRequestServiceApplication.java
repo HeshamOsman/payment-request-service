@@ -13,12 +13,4 @@ public class PaymentRequestServiceApplication {
 		SpringApplication.run(PaymentRequestServiceApplication.class, args);
 	}
 
-	@Bean
-	public ModelMapper modelMapper(){
-		return new ModelMapper();
-	}
-//	@Bean
-//	public ObjectMapper objectMapper(){
-//		return new ObjectMapper();
-//	}
 }
