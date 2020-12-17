@@ -11,23 +11,28 @@ import org.springframework.stereotype.Service;
 @Service
 public class KafkaProducer {
 
-        private static final Logger logger = LoggerFactory.getLogger(KafkaProducer.class);
-        private static final String TOPIC = "payment-requests-topic";
+    private static final Logger logger = LoggerFactory.getLogger(KafkaProducer.class);
+    private static final String TOPIC = "payment-requests-topic";
 
-        @Autowired
-        private KafkaTemplate<String, String> kafkaTemplate;
-        @Autowired
-        private ObjectMapper objectMapper;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ObjectMapper objectMapper;
 
-        public void sendMessage(Object message) {
-            String messageString=null;
-            try {
-                messageString = objectMapper.writeValueAsString(message);
-            } catch (JsonProcessingException e) {
-                logger.info(String.format("Can not parse, with error -> %s",e.getMessage()));
-            }
-            logger.info(String.format("#### -> Producing message -> %s", messageString));
-            this.kafkaTemplate.send(TOPIC, messageString);
+    public KafkaProducer(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
+        this.kafkaTemplate = kafkaTemplate;
+        this.objectMapper = objectMapper;
+    }
+
+    public void sendMessage(Object message) {
+
+        String messageString = null;
+        try {
+            messageString = objectMapper.writeValueAsString(message);
+        } catch (JsonProcessingException e) {
+            logger.info(String.format("Can not parse, with error -> %s", e.getMessage()));
         }
+
+        logger.info(String.format("#### -> Producing message -> %s", messageString));
+        this.kafkaTemplate.send(TOPIC, messageString);
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.gamary.paymentrequestservice.service.impl;
 
 import com.gamary.paymentrequestservice.entity.PaymentRequest;
+import com.gamary.paymentrequestservice.exception.ResourceNotFoundException;
 import com.gamary.paymentrequestservice.repository.PaymentRequestRepository;
 import com.gamary.paymentrequestservice.service.PaymentRequestService;
 
@@ -34,7 +35,9 @@ public class PaymentRequestServiceImpl implements PaymentRequestService {
     }
 
     @Override
-    public PaymentRequestDTO getPaymentRequest(Long id) {
-        return mapper.map(paymentRequestRepository.findById(id).get(),PaymentRequestDTO.class);
+    public PaymentRequestDTO getPaymentRequest(Long id) throws ResourceNotFoundException {
+        return mapper.map(paymentRequestRepository.findById(id).orElseThrow(
+                () ->  new ResourceNotFoundException(PaymentRequest.class.getSimpleName(),String.valueOf(id))
+        ),PaymentRequestDTO.class);
     }
 }
